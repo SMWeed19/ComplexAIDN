@@ -35,6 +35,7 @@ this will run the appropriate file for training or testing the network under the
 # one possible option if we can't figure out arg parsing with input splitting
 # which ranges (if at all) for int/float inputs?
 # add break for testing mode
+# should probably make this a function in utilities or something
 
 # mode
 while True:
