@@ -33,8 +33,8 @@ this will run the appropriate file for training or testing the network under the
 '''
 
 # one possible option if we can't figure out arg parsing with input splitting
-# need to add value errors for int/float inputs
 # which ranges (if at all) for int/float inputs?
+# add break for testing mode
 
 # mode
 while True:
@@ -56,7 +56,11 @@ while True:
 
 # dimension
 while True:
-    dim = int(input("Choose dimension (integer between 1 and 10): "))
+    try:
+        dim = int(input("Choose dimension (integer between 1 and 10): "))
+    except ValueError:
+        print("Must choose integer between 1 and 10.")
+        continue
     if dim not in range(1, 11):
         print("Must choose integer between 1 and 10.")
         continue
@@ -97,7 +101,11 @@ while True:
 
         # number of epochs
         while True:
-            epoch = int(input("Choose number of epochs (integer between 1 and 10): "))
+            try:
+                epoch = int(input("Choose number of epochs (integer between 1 and 10): "))
+            except ValueError:
+                print("Must choose integer between 1 and 10.")
+                continue
             if epoch not in range(1, 11):
                 print("Must choose integer between 1 and 10.")
                 continue
@@ -106,18 +114,26 @@ while True:
 
         # learning rate    
         while True:
-            lr = float(input("Choose learning rate (between 0 and 1): "))
+            try:
+                lr = float(input("Choose learning rate (between 0 and 1): "))
+            except ValueError:
+                print("Must choose value between 0 and 1.")
+                continue
             if not (0 <= lr <= 1):
-                print("Must choose between 0 and 1.")
+                print("Must choose value between 0 and 1.")
                 continue
             else:
                 break
 
         # batch size    
         while True:
-            batch_size = int(input("Choose batch size (integer between 100 and 10000): "))
-            if batch_size not in range(101, 10001):
-                print("Must choose between 100 and 10000.")
+            try:
+                batch_size = int(input("Choose batch size (integer between 100 and 10000): "))
+            except ValueError:
+                print("Must choose integer between 100 and 10000.")
+                continue
+            if batch_size not in range(100, 10001):
+                print("Must choose integer between 100 and 10000.")
                 continue
             else:
                 break
