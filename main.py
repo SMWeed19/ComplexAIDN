@@ -32,31 +32,122 @@ this will run the appropriate file for training or testing the network under the
     #(3) batchsize
 '''
 
-mode = input("Choose between training or testing")
-if mode not in {'training', 'testing'}:
-    print('Error')
-    # add exception
-structure = input("Choose between structures: ZxZ_group")
-    # add exception
-dim = int(input("What dimension should the representation be?"))
-    # add exception
-options = input("Add additional options, yes or no?"):
-activation = 'linear'
-bias = 'False'
-epoch = 2
-learningrate = 0.002
-batchsize = 2000
-if options == "yes":
-    activation = 'linear'
-        # add exception
-    bias = 'False'
-        # add exception
-    epoch = 2
-        # add exception
-    learningrate = 0.002
-        # add exception
-    batchsize = 2000   
-        # add exception
+# one possible option if we can't figure out arg parsing with input splitting
+# which ranges (if at all) for int/float inputs?
+# add break for testing mode
+# should probably make this a function in utilities or something
+
+# mode
+while True:
+    mode = input("Choose mode (training, testing): ")
+    if mode not in ["training", "testing"]:
+        print("Must choose training or testing.")
+        continue
+    else:
+        break
+
+# structure
+while True:
+    structure = input("Choose structure (ZxZ_group): ")
+    if structure not in ["ZxZ_group"]:
+        print("Must choose ZxZ_group")
+        continue
+    else:
+        break
+
+# dimension
+while True:
+    try:
+        dim = int(input("Choose dimension (integer between 1 and 10): "))
+    except ValueError:
+        print("Must choose integer between 1 and 10.")
+        continue
+    if dim not in range(1, 11):
+        print("Must choose integer between 1 and 10.")
+        continue
+    else:
+        break
+
+# optional arguments
+while True:
+    options = input("Would you like to input optional arguments? (yes or no): ")
+    if options not in ["yes", "no"]:
+        print("Must choose yes or no.")
+        continue
+    elif options == "yes":
+
+        # activation
+        while True:
+            activation = input("Choose activation type (linear, affine, nonlinear): ")
+            if activation not in ["linear", "affine", "nonlinear"]:
+                print("Must choose linear, affine, or nonlinear.")
+                continue
+            else:
+                if activation == "linear":
+                    bias = False
+                elif activation == "affine":
+                    bias = True
+                else:
+                    while True:
+                        bias = input("Would you like to add bias? (yes or no): ")
+                        if bias == "yes":
+                            bias = True
+                        elif bias == "no":
+                            bias = False
+                        else:
+                            print("Must choose yes or no.")
+                            continue
+                        break
+                break
+
+        # number of epochs
+        while True:
+            try:
+                epoch = int(input("Choose number of epochs (integer between 1 and 10): "))
+            except ValueError:
+                print("Must choose integer between 1 and 10.")
+                continue
+            if epoch not in range(1, 11):
+                print("Must choose integer between 1 and 10.")
+                continue
+            else:
+                break
+
+        # learning rate    
+        while True:
+            try:
+                lr = float(input("Choose learning rate (between 0 and 1): "))
+            except ValueError:
+                print("Must choose value between 0 and 1.")
+                continue
+            if not (0 <= lr <= 1):
+                print("Must choose value between 0 and 1.")
+                continue
+            else:
+                break
+
+        # batch size    
+        while True:
+            try:
+                batch_size = int(input("Choose batch size (integer between 100 and 10000): "))
+            except ValueError:
+                print("Must choose integer between 100 and 10000.")
+                continue
+            if batch_size not in range(100, 10001):
+                print("Must choose integer between 100 and 10000.")
+                continue
+            else:
+                break
+        break
+
+    # default optional arguments        
+    else:
+        activation = "linear"
+        bias = False
+        epoch = 2
+        lr = 0.002
+        batch_size = 2000
+        break
 
 if structure == "ZxZ_group":
     # outline functions needed from utilities and from ZxZ file
