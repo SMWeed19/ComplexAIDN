@@ -15,7 +15,12 @@ functions to create:
 
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras import layers
+from tensorflow.keras import layer
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Dense
+from tensorflow.keras.layers import Lambda
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.layers import Concatenate
 
 
 def generator(input_dim, activation_func, bias):
@@ -48,7 +53,48 @@ def get_n_generators(input_dim, activation_func, bias, n_of_generators):
    return list_of_gen
    
    
-# def train_net
+def train_net(model,x_data,y_data,model_name,lossfunction,lr,batch_size,epochs):
+    
+    """
+    Taken from Mustafa
+    Parameters: 
+    ----------            
+        model : keras model
+        x_data : training X data
+        y_data : training Y data
+        model_name : name of the file where the model is going to be saved.
+        lr: learning rate
+        batch_size : batch size
+        epochs : number of epochs
+    
+    """     
+    
+    checkpoint = ModelCheckpoint(model_name, monitor='loss', verbose=1, save_best_only=True, mode='min')
+    
+    callbacks_list = [checkpoint]   
+    
+    model.compile(optimizer=keras.optimizers.Adam(lr=lr), loss = lossfunction  )           
+    
+    model.fit(x_data, y_data,  batch_size=batch_size, epochs=epochs, shuffle = True,  verbose=1,callbacks_list=callbacks_list)  
+    
+    return 
+    
+def get_relation_tensor(modelpath,model,data):
+    
+    """
+    Taken from Mustafa
+    Parameters:
+    ----------    
+        modelpath: folder where the model weights are located.
+        model : keras model
+        data : the data that we want to infer the model on.
+    Returns:
+    -------    
+        the prediction of the input model on the input data.
+            
+    """
+    
+    model.load_weights(modelpath)
 
-# def get_relation_tensor
+    return model.predict(data)
    
