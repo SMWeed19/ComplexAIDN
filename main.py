@@ -11,7 +11,7 @@ this will run the appropriate file for training or testing the network under the
 
     # mode : testing or training
     
-    # type of structure. Options : TL, braid_group, symmetric_group, ZxZ
+    # type of structure. Options : ZxZ, sl_2, U_q(sl_2)
 
     # type of rep. Types are : linear, affine, nonlinear. Activation + bias determine the type.
     
