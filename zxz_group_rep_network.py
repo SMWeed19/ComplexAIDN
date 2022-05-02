@@ -12,6 +12,7 @@ Outline of functions to create:
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+from tensorflow.python.ops import math_ops
 
 def ZxZ_group_rep_net(a_op, b_op, input_dim):
   
