@@ -29,7 +29,7 @@ def ZxZ_group_rep_net(a_op, b_op, input_dim):
   
   return both_sides_aux
 
-def ZxZ_group_rep_loss
+def ZxZ_group_rep_loss(input_dim):
 
   def loss(y_true,y_pred):
     
