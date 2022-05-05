@@ -8,7 +8,7 @@ Outline of functions to create:
 3) Change to complex instead of real networks
 
 '''
-
+from tensorflow.keras import backend as K
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -17,7 +17,7 @@ from tensorflow.python.ops import math_ops
 def ZxZ_group_rep_net(a_op, b_op, input_dim):
   
   #left hand side of commutation relation
-  input_tensor = Input(input_shape=(input_dim,))
+  input_tensor = layers.Input(input_shape=(input_dim,))
   side_1 = a_op(side_1)
   side_1 = b_op(side_1)
   
@@ -25,8 +25,8 @@ def ZxZ_group_rep_net(a_op, b_op, input_dim):
   side_2 = b_op(input_tensor)
   side_2 = a_op(side_2)
   
-  output_tensor = Concatenate()([side_1, side_2])    
-  both_sides_aux = Model(inputs=[input_tensor], outputs=output_tensor)
+  output_tensor = layers.Concatenate()([side_1, side_2])    
+  both_sides_aux = keras.models.Model(inputs=[input_tensor], outputs=output_tensor)
   
   return both_sides_aux
 
