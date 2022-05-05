@@ -166,7 +166,7 @@ if structure == "ZxZ_group":
     A_oP,B_oP=ut.get_n_generators(dim
                                      ,activation
                                      ,bias
-                                     ,n_of_operators=2 )     
+                                     ,n_of_generators=2 )     
          
     M=zsnet.ZxZ_group_rep_net(A_oP,B_oP,input_shape=dim)
 
