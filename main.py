@@ -31,6 +31,13 @@ this will run the appropriate file for training or testing the network under the
 
     #(3) batchsize
 '''
+import numpy as np
+
+import zxz_group_rep_network as zsnet
+import utilities as ut
+
+weight_folder='weights/'  
+data_folder='data/'
 
 # one possible option if we can't figure out arg parsing with input splitting
 # which ranges (if at all) for int/float inputs?
@@ -148,13 +155,54 @@ while True:
         lr = 0.002
         batch_size = 2000
         break
-
+        
 if structure == "ZxZ_group":
     # outline functions needed from utilities and from ZxZ file
         # such as "get_n_operators" function, "ZxZ_group_rep_net" function, "train_net" function, "ZxZ_group_rep_loss" function, "get_relation_tensor" function
     # outline procedure on the use of these functions
+    
+    data1=np.load(data_folder+str(dim)+'d_data.npy')
+
+    A_oP,B_oP=ut.get_n_generators(dim
+                                     ,activation
+                                     ,bias
+                                     ,n_of_operators=2 )     
+         
+    M=zsnet.ZxZ_group_rep_net(A_oP,B_oP,input_shape=dim)
+
+    model_name=model_string_gen("ZxZ_group_relations_trainer_use_bias=")            
+    aname=model_string_gen("ZxZ_group_a_generator_use_bias=")   
+    bname=model_string_gen("ZxZ_group_b_generator_use_bias=")  
+
+    data_in=data1
+    data_out=data1
 
 
+
+    if mode=='training':
+
+        print("choosing the training mode. ")       
+        ut.train_net(M
+                     ,data_in
+                     ,data_out
+                     ,weight_folder+model_name 
+                     ,zsnet.ZxZ_group_rep_loss(dim)
+                     ,lr
+                     ,batch_size
+                     ,epoch)
+
+
+        print("saving the generator operator to file : " + aname )
+        A_oP.save(weight_folder+aname) 
+        print("saving the generator operator to file : " + bname )
+        B_oP.save(weight_folder+bname) 
+        print("model saved.")
+
+
+    else:  
+        relations_tensor=ut.get_relation_tensor(weight_folder+model_name,M,data_in)          
+        print("testing the relation:  ")
+        print( np.linalg.norm( relations_tensor[:,:dim][:100]-relations_tensor[:,dim:][:100]))
     
     
     
