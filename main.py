@@ -43,6 +43,7 @@ data_folder='data/'
 # which ranges (if at all) for int/float inputs?
 # add break for testing mode
 # should probably make this a function in utilities or something
+# fix model_string_gen to our use, might delete the delta crap
 
 # mode
 while True:
@@ -156,6 +157,24 @@ while True:
         batch_size = 2000
         break
         
+
+def model_string_gen(model_name):
+    
+    name=[model_name
+    ,str(bias)
+    ,"_activation="
+    ,  str(activation)
+    ,"_"
+    ,str(dim)
+    ,"_to_"
+    ,str(dim)
+    ,"_delta="
+    ,str(0),"_.h5"]
+    
+    return "".join(name)        
+
+
+
 if structure == "ZxZ_group":
     # outline functions needed from utilities and from ZxZ file
         # such as "get_n_operators" function, "ZxZ_group_rep_net" function, "train_net" function, "ZxZ_group_rep_loss" function, "get_relation_tensor" function
