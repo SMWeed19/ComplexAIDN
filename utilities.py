@@ -15,7 +15,7 @@ functions to create:
 
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras import layer
+from tensorflow.keras import layers
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.layers import Lambda
