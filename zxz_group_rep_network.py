@@ -1,44 +1,100 @@
-# network for training relations for ZxZ
+'''
+utility functions for network creation and training
+'''
 
 '''
-Outline of functions to create:
+functions to create:
 
-1) "auxilarly" network, used to train the other networks that serve as representations of the generators
-2) a loss function for the relations of ZxZ, i.e. commutativity
-3) Change to complex instead of real networks
+1) creates a network that serves as a representation of a group generator
+2) creates a multiple of networks for each generator of the group using (1)
+3) train the network on the relations of the group *
+    * confusion about how the group relations are being used for network loss here
+4) gives the error on satisfying the relation of the group
 
 '''
-from tensorflow.keras import backend as K
+
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-from tensorflow.python.ops import math_ops
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Dense
+from tensorflow.keras.layers import Lambda
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.layers import Concatenate
 
-def ZxZ_group_rep_net(a_op, b_op, input_dim):
-  
-  #left hand side of commutation relation
-  input_tensor = layers.Input(shape=(input_dim,))
-  side_1 = a_op(input_tensor)
-  side_1 = b_op(side_1)
-  
-  #right hand side of commutation relation
-  side_2 = b_op(input_tensor)
-  side_2 = a_op(side_2)
-  
-  output_tensor = layers.Concatenate()([side_1, side_2])    
-  both_sides_aux = keras.models.Model(inputs=[input_tensor], outputs=output_tensor)
-  
-  return both_sides_aux
 
-def ZxZ_group_rep_loss(input_dim):
+def generator(input_dim, activation_func, bias):
+   
+   """
+   Purpose: 
+      This is a network that can used to represent element/generator in a given representation.
+   """
+   
+   model = keras.Sequential(
+      [
+      layers.Dense(2*input_dim+2, use_bias=bias, activation=activation_func, input_shape=[input_dim]),
+      layers.Dense(2*input_dim+2, use_bias=bias, activation=activation_func),
+      layers.Dense(100, use_bias=bias, activation=activation_func),
+      layers.Dense(50, use_bias=bias, activation=activation_func),
+      layers.Dense(input_dim)
+      ])
+   
+   return model
 
-  def loss(y_true,y_pred):
+
+def get_n_generators(input_dim, activation_func, bias, n_of_generators):
+   """
+   Purpose:
+      Helper function to create all the needed generators in a list for a given presentation of an algebraic object.
+   """
+   
+   list_of_gen = [ generator(input_dim, activation_func, bias) for i in range(0, n_of_generators)]
+   
+   return list_of_gen
+   
+   
+def train_net(model,x_data,y_data,model_name,lossfunction,lr,batch_size,epochs):
     
-    # split the output relation tensor of the model 
-    side_1_out=tf.slice(y_pred,[0,0],[-1,input_dim]) #all rows, first input_dim number of columns
-    side_2_out=tf.slice(y_pred,[0,input_dim],[-1,input_dim]) #all rows, last input_dim number of columns 
-        
-    A=K.mean(math_ops.square(side_1_out - side_2_out), axis=-1)                 
-    return A
+    """
+    Taken from Mustafa
+    Parameters: 
+    ----------            
+        model : keras model
+        x_data : training X data
+        y_data : training Y data
+        model_name : name of the file where the model is going to be saved.
+        lr: learning rate
+        batch_size : batch size
+        epochs : number of epochs
     
-  return loss
+    """     
+    
+    checkpoint = ModelCheckpoint(model_name, monitor='loss', verbose=1, save_best_only=True, mode='min')
+    
+    callbacks_list = [checkpoint]   
+    
+    model.compile(optimizer=keras.optimizers.Adam(lr=lr), loss = lossfunction  )           
+    
+    model.fit(x_data, y_data,  batch_size=batch_size, epochs=epochs, shuffle = True,  verbose=1,callbacks=callbacks_list)  
+    
+    return 
+    
+def get_relation_tensor(modelpath,model,data):
+    
+    """
+    Taken from Mustafa
+    Parameters:
+    ----------    
+        modelpath: folder where the model weights are located.
+        model : keras model
+        data : the data that we want to infer the model on.
+    Returns:
+    -------    
+        the prediction of the input model on the input data.
+            
+    """
+    
+    model.load_weights(modelpath)
+
+    return model.predict(data)
+   
