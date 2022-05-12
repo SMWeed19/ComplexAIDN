@@ -187,7 +187,7 @@ if structure == "ZxZ_group":
                                      ,bias
                                      ,n_of_generators=2 )     
          
-    M=zsnet.ZxZ_group_rep_net(A_oP,B_oP,input_shape=dim)
+    M=zsnet.ZxZ_group_rep_net(A_oP,B_oP,dim)
 
     model_name=model_string_gen("ZxZ_group_relations_trainer_use_bias=")            
     aname=model_string_gen("ZxZ_group_a_generator_use_bias=")   
