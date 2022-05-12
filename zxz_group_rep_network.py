@@ -17,8 +17,8 @@ from tensorflow.python.ops import math_ops
 def ZxZ_group_rep_net(a_op, b_op, input_dim):
   
   #left hand side of commutation relation
-  input_tensor = layers.Input(input_shape=(input_dim,))
-  side_1 = a_op(side_1)
+  input_tensor = layers.Input(shape=(input_dim,))
+  side_1 = a_op(input_tensor)
   side_1 = b_op(side_1)
   
   #right hand side of commutation relation
